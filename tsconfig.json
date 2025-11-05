@@ -25,3 +25,8 @@
     "src"
   ]
 }
+{
+  "compilerOptions": {
+    "types": ["vite/client"]
+  }
+}
