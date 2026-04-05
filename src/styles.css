@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Selection + scrollbar for clean Apple-like feel */
+::selection { background: #000; color: #fff; }
+.dark ::selection { background: #fff; color: #000; }
+
+/* smooth underline */
+.link-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  background-size: 0% 1px;
+  transition: background-size .3s ease;
+}
+.link-underline:hover { background-size: 100% 1px; }
