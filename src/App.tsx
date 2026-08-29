@@ -18,6 +18,7 @@ import { getProjects } from './projects'
 import { I18nProvider, useI18n } from './i18n'
 import { Timeline } from './components/Timeline'
 import { ContactForm } from './components/ContactForm'
+import { ProjectCarousel } from './components/ProjectCarousel'
 
 const LINKEDIN_URL = 'https://www.linkedin.com/in/alexander-sedov-768081428/'
 
@@ -188,19 +189,17 @@ function Shell() {
 
       <section id="projects" className="mx-auto max-w-6xl px-4 py-16 border-t border-neutral-200/60 dark:border-neutral-800/60">
         <motion.h2 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-2xl md:text-3xl font-bold mb-8">{t('section_projects')}</motion.h2>
-        <div className="grid lg:grid-cols-3 gap-6">
+        <div className="grid lg:grid-cols-2 gap-6">
           {projects.map((p) => (
             <motion.article key={p.title} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="overflow-hidden rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:shadow-soft dark:hover:shadow-softdark transition">
-              <div className="aspect-[16/10] overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-                <img src={p.preview} alt={p.title} className="h-full w-full object-cover object-top transition duration-500 hover:scale-[1.03]" />
-              </div>
+              <ProjectCarousel images={p.images} title={p.title} />
               <div className="p-5">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <h3 className="font-semibold text-lg">{p.title}</h3>
                     <p className="opacity-70 text-sm mt-1">{p.tagline}</p>
                   </div>
-                  <ExternalLink size={18} className="opacity-50 shrink-0" />
+                  {p.links.length > 0 && <ExternalLink size={18} className="opacity-50 shrink-0" />}
                 </div>
                 <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-300">{p.description}</p>
                 <div className="mt-4 flex flex-wrap gap-2">

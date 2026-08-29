@@ -1,0 +1,24 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F8FAFC"/>
+  <rect width="1600" height="72" fill="white"/>
+  <path d="M0 72H1600" stroke="#E5E7EB"/>
+  <rect x="116" y="17" width="38" height="38" rx="9" fill="#10B981"/>
+  <text x="129" y="44" fill="white" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700">Q</text>
+  <text x="165" y="45" fill="#111827" font-family="Arial, Helvetica, sans-serif" font-size="25" font-weight="700">Quiz Flashcards</text>
+  <path d="M1454 25A14 14 0 1 0 1470 42A12 12 0 0 1 1454 25Z" stroke="#64748B" stroke-width="3" stroke-linecap="round"/>
+
+  <text x="800" y="172" text-anchor="middle" fill="#0F172A" font-family="Arial, Helvetica, sans-serif" font-size="44" font-weight="700">Добро пожаловать в Quiz Flashcards!</text>
+  <text x="800" y="220" text-anchor="middle" fill="#64748B" font-family="Arial, Helvetica, sans-serif" font-size="23">Загрузите CSV файл с вопросами, чтобы начать тест</text>
+
+  <rect x="420" y="282" width="760" height="350" rx="20" fill="white" stroke="#E2E8F0" stroke-width="2"/>
+  <text x="475" y="338" fill="#0F172A" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700">⇧  Загрузить файл</text>
+  <text x="475" y="379" fill="#64748B" font-family="Arial, Helvetica, sans-serif" font-size="18">Выберите CSV файл с вашего компьютера</text>
+  <rect x="474" y="405" width="652" height="174" rx="12" stroke="#CBD5E1" stroke-width="3" stroke-dasharray="10 10"/>
+  <path d="M800 442V502M800 442L778 464M800 442L822 464M768 506V518C768 527 775 534 784 534H816C825 534 832 527 832 518V506" stroke="#94A3B8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="800" y="555" text-anchor="middle" fill="#475569" font-family="Arial, Helvetica, sans-serif" font-size="18">Перетащите CSV файл сюда или нажмите для выбора</text>
+
+  <rect x="320" y="685" width="960" height="145" rx="14" fill="#EFF6FF" stroke="#BFDBFE"/>
+  <text x="350" y="732" fill="#1E3A8A" font-family="Arial, Helvetica, sans-serif" font-size="23" font-weight="700">Поддерживаемые форматы CSV:</text>
+  <text x="350" y="777" fill="#1D4ED8" font-family="Arial, Helvetica, sans-serif" font-size="18">• Стандартный: question, option1, option2, option3, option4, answer</text>
+  <text x="350" y="812" fill="#1D4ED8" font-family="Arial, Helvetica, sans-serif" font-size="18">• Альтернативный: question, correct, wrong1, wrong2, wrong3</text>
+</svg>
