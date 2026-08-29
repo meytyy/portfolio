@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
 import {
   Github,
+  Linkedin,
   Mail,
   Send,
   ArrowUpRight,
@@ -16,6 +17,9 @@ import {
 import { getProjects } from './projects'
 import { I18nProvider, useI18n } from './i18n'
 import { Timeline } from './components/Timeline'
+import { ContactForm } from './components/ContactForm'
+
+const LINKEDIN_URL = 'https://www.linkedin.com/in/alexander-sedov-768081428/'
 
 const nav = [
   { id: 'home', labelKey: 'nav_home' },
@@ -113,6 +117,7 @@ function Shell() {
                 <Globe size={18} />
               </button>
               <a href="https://github.com/meytyy" target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="GitHub"><Github size={18} /></a>
+              <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="LinkedIn"><Linkedin size={18} /></a>
               <button onClick={() => setDark((d) => !d)} className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="Theme">
                 {dark ? <Sun size={18} /> : <Moon size={18} />}
               </button>
@@ -235,18 +240,15 @@ function Shell() {
               <a className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-2 link-underline" href="https://t.me/sedovq" target="_blank" rel="noreferrer"><Send size={16} /> @sedovq</a>
               <a className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-2 link-underline" href="mailto:ssddsss1337@gmail.com"><Mail size={16} /> ssddsss1337@gmail.com</a>
               <a className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-2 link-underline" href="https://github.com/meytyy" target="_blank" rel="noreferrer"><Github size={16} /> GitHub</a>
+              <a className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-2 link-underline" href={LINKEDIN_URL} target="_blank" rel="noreferrer"><Linkedin size={16} /> LinkedIn</a>
             </div>
             <p className="mt-6 text-sm text-neutral-600 dark:text-neutral-300">
               {t('contact_desc')}
             </p>
           </div>
           <div className="rounded-3xl border border-neutral-200 dark:border-neutral-800 p-6">
-            <div className="opacity-70 text-sm">{t('what_i_do')}</div>
-            <ul className="mt-3 list-disc pl-5 text-sm space-y-2">
-              <li>{t('what_i_do_1')}</li>
-              <li>{t('what_i_do_2')}</li>
-              <li>{t('what_i_do_3')}</li>
-            </ul>
+            <h3 className="font-semibold text-lg mb-4">{t('contact_form_title')}</h3>
+            <ContactForm />
           </div>
         </div>
         <footer className="mt-12 py-6 text-center opacity-60 text-sm">© {new Date().getFullYear()} Alexander Sedov — {t('footer')}</footer>
