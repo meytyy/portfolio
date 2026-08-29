@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { AnimatePresence, motion, useScroll, useSpring } from 'framer-motion'
 import {
   Github,
   Linkedin,
@@ -32,19 +32,26 @@ const nav = [
 ]
 
 function Shell() {
-  const [dark, setDark] = useState(false)
+  const [dark, setDark] = useState(() => {
+    const saved = localStorage.getItem('theme')
+    return saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches
+  })
+  const [themeBurst, setThemeBurst] = useState(0)
   const { scrollYProgress } = useScroll()
   const scaleX = useSpring(scrollYProgress, { stiffness: 100, damping: 30 })
   const { t, toggle, lang } = useI18n()
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', dark)
+    localStorage.setItem('theme', dark ? 'dark' : 'light')
   }, [dark])
 
-  useEffect(() => {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
-    setDark(prefersDark)
-  }, [])
+  function toggleTheme() {
+    document.documentElement.classList.add('theme-transition')
+    setDark((value) => !value)
+    setThemeBurst((value) => value + 1)
+    window.setTimeout(() => document.documentElement.classList.remove('theme-transition'), 700)
+  }
 
   function scrollToId(id: string) {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -96,7 +103,30 @@ function Shell() {
   const projects = useMemo(() => getProjects(lang), [lang])
 
   return (
-    <div className="font-sans bg-white text-neutral-950 dark:bg-neutral-950 dark:text-white">
+    <div className="site-shell min-h-screen overflow-x-hidden font-sans bg-white text-neutral-950 dark:bg-neutral-950 dark:text-white">
+      <motion.div
+        className="fixed inset-0 z-[90] origin-top bg-neutral-950 pointer-events-none dark:bg-white"
+        initial={{ scaleY: 1 }}
+        animate={{ scaleY: 0 }}
+        transition={{ duration: 0.85, delay: 0.12, ease: [0.76, 0, 0.24, 1] }}
+      />
+      <AnimatePresence>
+        {themeBurst > 0 && (
+          <motion.div
+            key={themeBurst}
+            className="fixed inset-0 z-[70] pointer-events-none"
+            style={{
+              background: dark
+                ? 'radial-gradient(circle at calc(100% - 32px) 28px, rgba(255,255,255,.7), rgba(255,255,255,0) 42%)'
+                : 'radial-gradient(circle at calc(100% - 32px) 28px, rgba(10,10,10,.65), rgba(10,10,10,0) 42%)',
+            }}
+            initial={{ opacity: 0.75, scale: 0.4 }}
+            animate={{ opacity: 0, scale: 2.2 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.65, ease: 'easeOut' }}
+          />
+        )}
+      </AnimatePresence>
       <motion.div style={{ scaleX }} className="fixed left-0 right-0 top-0 h-[2px] origin-left bg-black/80 dark:bg-white/80 z-50" />
 
       <header className="sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:supports-[backdrop-filter]:bg-neutral-950/60 border-b border-neutral-200/60 dark:border-neutral-800/60">
@@ -114,14 +144,18 @@ function Shell() {
               ))}
             </nav>
             <div className="flex items-center gap-2">
-              <button onClick={toggle} className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="Language">
+              <motion.button whileTap={{ scale: 0.82, rotate: -18 }} onClick={toggle} className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="Language">
                 <Globe size={18} />
-              </button>
+              </motion.button>
               <a href="https://github.com/meytyy" target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="GitHub"><Github size={18} /></a>
               <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="LinkedIn"><Linkedin size={18} /></a>
-              <button onClick={() => setDark((d) => !d)} className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="Theme">
-                {dark ? <Sun size={18} /> : <Moon size={18} />}
-              </button>
+              <motion.button whileTap={{ scale: 0.78 }} onClick={toggleTheme} className="p-2 rounded-lg hover:bg-neutral-200/60 dark:hover:bg-neutral-800/60 transition" aria-label="Theme">
+                <AnimatePresence mode="wait" initial={false}>
+                  <motion.span key={dark ? 'sun' : 'moon'} initial={{ opacity: 0, rotate: -90, scale: 0.5 }} animate={{ opacity: 1, rotate: 0, scale: 1 }} exit={{ opacity: 0, rotate: 90, scale: 0.5 }} transition={{ duration: 0.22 }} className="block">
+                    {dark ? <Sun size={18} /> : <Moon size={18} />}
+                  </motion.span>
+                </AnimatePresence>
+              </motion.button>
             </div>
           </div>
         </div>
@@ -139,23 +173,23 @@ function Shell() {
             <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1, duration: 0.6 }} className="mt-5 text-lg text-neutral-600 dark:text-neutral-300 max-w-xl">
               {t('hero_desc')}
             </motion.p>
-            <div className="mt-8 flex flex-wrap gap-3">
+            <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18, duration: 0.6 }} className="mt-8 flex flex-wrap gap-3">
               <a href="#projects" className="inline-flex items-center gap-2 rounded-full border border-neutral-300 dark:border-neutral-700 px-4 py-2 hover:shadow-soft hover:dark:shadow-softdark transition">
                 <Rocket size={16} /> {t('btn_projects')}
               </a>
               <a href="#contact" className="inline-flex items-center gap-2 rounded-full px-4 py-2 bg-black text-white dark:bg-white dark:text-black hover:translate-y-[-1px] transition">
                 {t('btn_contact')} <ArrowUpRight size={16} />
               </a>
-            </div>
-            <div className="mt-6 flex flex-wrap items-center gap-6 text-sm opacity-70">
+            </motion.div>
+            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.7 }} transition={{ delay: 0.28, duration: 0.7 }} className="mt-6 flex flex-wrap items-center gap-6 text-sm">
               <div className="flex items-center gap-2"><Code2 size={16} /> React / TypeScript</div>
               <div className="flex items-center gap-2"><TerminalSquare size={16} /> Vite / Node / Python</div>
-            </div>
+            </motion.div>
           </div>
 
-          <motion.div initial={{ opacity: 0, scale: 0.98 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} viewport={{ once: true }} className="relative">
-            <div className="rounded-[28px] border border-neutral-200 dark:border-neutral-800 shadow-soft dark:shadow-softdark overflow-hidden bg-neutral-100 dark:bg-neutral-900">
-              <img src="/profile.jpg" alt="Profile" className="h-[520px] w-full object-cover object-center" />
+          <motion.div initial={{ opacity: 0, scale: 0.9, rotate: 1.5 }} animate={{ opacity: 1, scale: 1, rotate: 0 }} whileHover={{ scale: 1.015, rotate: -0.35 }} transition={{ duration: 0.75, delay: 0.18, ease: [0.22, 1, 0.36, 1] }} className="relative">
+            <div className="group rounded-[28px] border border-neutral-200 dark:border-neutral-800 shadow-soft dark:shadow-softdark overflow-hidden bg-neutral-100 dark:bg-neutral-900">
+              <img src="/profile.jpg" alt="Alexander Sedov" className="h-[520px] w-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.035]" />
             </div>
             <div className="absolute -bottom-4 -left-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-950/90 backdrop-blur px-4 py-3 shadow-soft dark:shadow-softdark">
               <div className="text-xs uppercase tracking-[0.2em] opacity-60">{t('available_for_label')}</div>
@@ -172,7 +206,7 @@ function Shell() {
             <h3 className="font-semibold mb-3 opacity-80">{t('skills_hard')}</h3>
             <ul className="flex flex-wrap gap-2 text-sm">
               {['JavaScript', 'TypeScript', 'React', 'Vite', 'TailwindCSS', 'Framer Motion', 'Node.js', 'Express', 'Python', 'FastAPI', 'Git', 'Docker', 'Netlify', 'Vercel'].map((s) => (
-                <li key={s} className="rounded-full border border-neutral-300 dark:border-neutral-700 px-3 py-1">{s}</li>
+                <motion.li whileHover={{ y: -3, scale: 1.04 }} transition={{ type: 'spring', stiffness: 420, damping: 20 }} key={s} className="rounded-full border border-neutral-300 dark:border-neutral-700 px-3 py-1 bg-white/40 dark:bg-neutral-950/40">{s}</motion.li>
               ))}
             </ul>
           </div>
@@ -190,8 +224,8 @@ function Shell() {
       <section id="projects" className="mx-auto max-w-6xl px-4 py-16 border-t border-neutral-200/60 dark:border-neutral-800/60">
         <motion.h2 initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="text-2xl md:text-3xl font-bold mb-8">{t('section_projects')}</motion.h2>
         <div className="grid lg:grid-cols-2 gap-6">
-          {projects.map((p) => (
-            <motion.article key={p.title} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="overflow-hidden rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white dark:bg-neutral-950 hover:shadow-soft dark:hover:shadow-softdark transition">
+          {projects.map((p, index) => (
+            <motion.article key={p.title} initial={{ opacity: 0, y: 42, filter: 'blur(10px)' }} whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} whileHover={{ y: -7 }} transition={{ duration: 0.55, delay: index * 0.08, ease: [0.22, 1, 0.36, 1] }} viewport={{ once: true, amount: 0.18 }} className="overflow-hidden rounded-3xl border border-neutral-200 dark:border-neutral-800 bg-white/90 dark:bg-neutral-950/90 hover:shadow-soft dark:hover:shadow-softdark">
               <ProjectCarousel images={p.images} title={p.title} />
               <div className="p-5">
                 <div className="flex items-start justify-between gap-3">

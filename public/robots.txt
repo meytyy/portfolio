@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://portfolio-hbqkj4l0p-meytyys-projects.vercel.app/sitemap.xml
